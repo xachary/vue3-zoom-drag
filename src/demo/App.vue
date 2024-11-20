@@ -118,10 +118,10 @@ body {
 
   &::before {
     position: absolute;
-    left: 50%;
-    transform: translate(-50%, 0);
+    width: 100%;
     color: #999;
     font-size: 24px;
+    text-align: center;
   }
 
   &:nth-of-type(1) {
