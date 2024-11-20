@@ -30,6 +30,10 @@ const { zoom, left, top, fitSize } = useZoomDrag({
 })
 
 const emits = defineEmits(['ready', 'resize'])
+
+defineExpose({
+  fitSize,
+})
 </script>
 
 <template>
