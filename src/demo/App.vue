@@ -19,7 +19,7 @@
       />
     </div>
   </div>
-  <ZoomDrag class="demo">
+  <ZoomDrag class="demo" :zoomSpeed="0.01" :zoomMin="0.1">
     <template #default="{ fitSize: fitSizeInner }">
       <div :style="{ visibility: ready2 ? 'visible' : 'hidden' }">
         <img
@@ -51,7 +51,8 @@ const ready1 = ref(false)
 const { fitSize } = useZoomDrag({
   board,
   target,
-  zoomSpeed: 0.05,
+  zoomSpeed: 0.01,
+  zoomMin: 0.1,
 })
 
 const ready2 = ref(false)
@@ -101,11 +102,13 @@ body {
 }
 
 .demo {
-  height: calc(50vh - 24px * 3 / 2);
+  display: inline-block;
+  width: calc(50% - 24px * 0.5);
+  height: calc(100vh - 24px * 2);
   background-color: #fff;
 
   & + .demo {
-    margin-top: 24px;
+    margin-left: 24px;
   }
 }
 </style>
