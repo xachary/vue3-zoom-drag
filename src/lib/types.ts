@@ -16,7 +16,7 @@ export type useZoomDragOptions = {
    * @param left x
    * @param top y
    */
-  onResize?: (width: number, height: number, left: number, top: number) => void
+  onResize?: (width: number, height: number, left: number, top: number, zoom: number) => void
   /**
    * 初始化完成事件
    */

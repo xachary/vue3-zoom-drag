@@ -36,13 +36,17 @@
       </div>
     </template>
   </ZoomDrag>
+  <div class="demo" v-zoom-drag="{ zoomSpeed: 0.01, zoomMin: 0.1 }">
+    <img src="/big.jpg" alt="img" @dragstart.prevent />
+  </div>
 </template>
 <script setup lang="ts">
 import { ref } from 'vue'
 
 import { useZoomDrag } from '@/lib/hooks/useZoomDrag'
 
-import { ZoomDrag } from '@/lib/components/ZoomDrag'
+// src/main.ts 中 app.use 安装了
+// import { ZoomDrag } from '@/lib/components/ZoomDrag'
 
 const board = ref<HTMLElement>()
 const target = ref<HTMLElement>()
@@ -103,12 +107,39 @@ body {
 
 .demo {
   display: inline-block;
-  width: calc(50% - 24px * 0.5);
+  width: calc(33.33% - 24px * 2 / 3);
   height: calc(100vh - 24px * 2);
+  overflow: hidden;
   background-color: #fff;
 
   & + .demo {
     margin-left: 24px;
+  }
+
+  &::before {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, 0);
+    color: #999;
+    font-size: 24px;
+  }
+
+  &:nth-of-type(1) {
+    &::before {
+      content: 'hook: useZoomDrag';
+    }
+  }
+
+  &:nth-of-type(2) {
+    &::before {
+      content: 'component: ZoomDrag';
+    }
+  }
+
+  &:nth-of-type(3) {
+    &::before {
+      content: 'directive: v-zoom-drag';
+    }
   }
 }
 </style>

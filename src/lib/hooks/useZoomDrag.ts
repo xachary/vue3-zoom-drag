@@ -77,7 +77,6 @@ export function useZoomDrag(opts: useZoomDragOptions): {
   // 自适应大小
   async function fitSize(animate = false) {
     const target = getTarget()
-
     if (options.board.value && target) {
       // 记录容器、目标大小
       ;[state.boardWidth, state.boardHeight, state.boardLeft, state.boardTop] = await getSize(
@@ -246,7 +245,13 @@ export function useZoomDrag(opts: useZoomDragOptions): {
           options.board.value
         )
         options.onResize &&
-          options.onResize(state.boardWidth, state.boardHeight, state.boardLeft, state.boardTop)
+          options.onResize(
+            state.boardWidth,
+            state.boardHeight,
+            state.boardLeft,
+            state.boardTop,
+            zoom.value
+          )
       })
       resizeObserver.observe(options.board.value)
     }
@@ -303,6 +308,9 @@ export function useZoomDrag(opts: useZoomDragOptions): {
         // 初始化完成
         options.onReady && options.onReady()
       }
+    },
+    {
+      immediate: true,
     }
   )
 

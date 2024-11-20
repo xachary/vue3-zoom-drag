@@ -24,8 +24,8 @@ const { zoom, left, top, fitSize } = useZoomDrag({
   onReady: () => {
     emits('ready')
   },
-  onResize: (width: number, height: number, left: number, top: number) => {
-    emits('resize', width, height, left, top)
+  onResize: (width: number, height: number, left: number, top: number, zoom: number) => {
+    emits('resize', width, height, left, top, zoom)
   },
 })
 
