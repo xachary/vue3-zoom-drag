@@ -1,7 +1,7 @@
 import { createApp } from 'vue'
 import App from './demo/App.vue'
 
-import ZoomDrag from '@/lib/components/ZoomDrag'
+import ZoomDrag from '@/lib'
 
 import { logArray } from './log'
 

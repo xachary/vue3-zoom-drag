@@ -43,10 +43,12 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
-import { useZoomDrag } from '@/lib/hooks/useZoomDrag'
+import useZoomDrag from '@/lib/hooks/useZoomDrag'
+// import { useZoomDrag } from '../../dist'
 
 // src/main.ts 中 app.use 安装了
 // import { ZoomDrag } from '@/lib/components/ZoomDrag'
+// import { ZoomDrag } from '../../dist'
 
 const board = ref<HTMLElement>()
 const target = ref<HTMLElement>()

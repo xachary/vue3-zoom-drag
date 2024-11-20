@@ -9,7 +9,7 @@ const DefaultOptions: Partial<useZoomDragOptions> = {
   padding: [0, 0, 0, 0],
 }
 
-export function useZoomDrag(opts: useZoomDragOptions): {
+export default function useZoomDrag(opts: useZoomDragOptions): {
   /**
    * 目标放大缩小倍速
    */

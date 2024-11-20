@@ -67,9 +67,7 @@ export default defineConfig(({ mode }) => {
         m === 'dist'
           ? {
               name: PackageJSON.name,
-              entry: fileURLToPath(
-                new URL('./src/lib/components/GridDragResize/index.ts', import.meta.url)
-              ),
+              entry: fileURLToPath(new URL('./src/lib/index.ts', import.meta.url)),
               formats: ['es'],
               fileName: 'index',
             }

@@ -1,11 +1,8 @@
 import { ref, type App } from 'vue'
+import ZoomDrag from './components/ZoomDrag.vue'
+import useZoomDrag from './hooks/useZoomDrag'
 
-import ZoomDrag from './ZoomDrag.vue'
-import { useZoomDrag } from '@/lib/hooks/useZoomDrag'
-
-export * from '../../types'
-
-export { ZoomDrag }
+export * from './types'
 
 export default {
   install(app: App) {
@@ -21,3 +18,5 @@ export default {
     })
   },
 }
+
+export { ZoomDrag, useZoomDrag }

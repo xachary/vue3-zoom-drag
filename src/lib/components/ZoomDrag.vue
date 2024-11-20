@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useZoomDrag } from '@/lib/hooks/useZoomDrag'
-import type { useZoomDragOptions } from '../../types'
+import useZoomDrag from '@/lib/hooks/useZoomDrag'
+import type { useZoomDragOptions } from '../types'
 
 const props = withDefaults(
   defineProps<Pick<useZoomDragOptions, 'zoomSpeed' | 'zoomMax' | 'zoomMin' | 'padding'>>(),
