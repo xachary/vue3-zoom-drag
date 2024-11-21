@@ -53,6 +53,7 @@ import type { useZoomDragOptions } from '@/lib/types'
 
 import useZoomDrag from '@/lib/hooks/useZoomDrag'
 // import { useZoomDrag } from '../../dist'
+// import { useZoomDrag } from 'vue3-zoom-drag'
 
 // src/main.ts 中 app.use 安装了
 // import ZoomDrag from '@/lib/components/ZoomDrag.vue'

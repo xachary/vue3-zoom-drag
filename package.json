@@ -1,6 +1,6 @@
 {
   "name": "vue3-zoom-drag",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "type": "module",
   "files": [
     "dist"
@@ -27,8 +27,8 @@
     "docs:preview": "vitepress preview src/docs --port 6173"
   },
   "dependencies": {
-    "vue": "^3.4.21",
-    "vue3-zoom-drag": "^0.0.6"
+    "vue": "^3.5.12",
+    "vue3-zoom-drag": "^0.0.7"
   },
   "devDependencies": {
     "@commitlint/cli": "19.2.1",
