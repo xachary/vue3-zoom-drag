@@ -56,7 +56,7 @@ export default function useZoomDrag(opts: useZoomDragOptions): {
   })
 
   function getTarget() {
-    if (options.target?.value === void 0) {
+    if (options.target === void 0) {
       if (options.board.value !== void 0) {
         return options.board.value.children[0] as HTMLElement
       }

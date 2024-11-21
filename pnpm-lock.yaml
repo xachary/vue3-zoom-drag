@@ -11,6 +11,9 @@ importers:
       vue:
         specifier: ^3.4.21
         version: 3.4.21(typescript@5.4.3)
+      vue3-zoom-drag:
+        specifier: ^0.0.6
+        version: 0.0.6(typescript@5.4.3)
     devDependencies:
       '@commitlint/cli':
         specifier: 19.2.1
@@ -2771,6 +2774,12 @@ packages:
     peerDependencies:
       typescript: '*'
 
+  vue3-zoom-drag@0.0.5:
+    resolution: {integrity: sha512-gMmWiwNzh0SD8RAXjM4S6mNhD0lWee2g/AderzG7B9Ziz+yMTtITrxZLH1Fm1d+Gy/3425vIBVSwgTf7fVI12g==}
+
+  vue3-zoom-drag@0.0.6:
+    resolution: {integrity: sha512-j86LQE7aZFoSAZZGGBloQlfMWanqUaa6brzmXjT+XuWZVC5LLBWxg1QiEnq14oaH6rGkaVBELn3QLV3QupI3Bg==}
+
   vue@3.4.21:
     resolution: {integrity: sha512-5hjyV/jLEIKD/jYl4cavMcnzKwjMKohureP8ejn3hhEjwhWIhWeuzL2kJAjzl/WyVsgPY56Sy4Z40C3lVshxXA==}
     peerDependencies:
@@ -5524,6 +5533,19 @@ snapshots:
       '@vue/language-core': 2.0.7(typescript@5.4.3)
       semver: 7.6.0
       typescript: 5.4.3
+
+  vue3-zoom-drag@0.0.5(typescript@5.4.3):
+    dependencies:
+      vue: 3.5.12(typescript@5.4.3)
+    transitivePeerDependencies:
+      - typescript
+
+  vue3-zoom-drag@0.0.6(typescript@5.4.3):
+    dependencies:
+      vue: 3.5.12(typescript@5.4.3)
+      vue3-zoom-drag: 0.0.5(typescript@5.4.3)
+    transitivePeerDependencies:
+      - typescript
 
   vue@3.4.21(typescript@5.4.3):
     dependencies:
