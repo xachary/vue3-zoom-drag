@@ -1,6 +1,6 @@
 {
   "name": "vue3-zoom-drag",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "type": "module",
   "files": [
     "dist"
@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "vue": "^3.5.12",
-    "vue3-zoom-drag": "^0.0.7"
+    "vue3-zoom-drag": "^0.0.8"
   },
   "devDependencies": {
     "@commitlint/cli": "19.2.1",

@@ -1,4 +1,4 @@
-import { type Ref } from 'vue'
+import { type Ref, type ComputedRef } from 'vue'
 
 export interface ZoomDragSize {
   width: number
@@ -15,11 +15,11 @@ export type useZoomDragOptions = {
   /**
    * 容器区域
    */
-  board: Ref<HTMLElement | undefined>
+  board: Ref<HTMLElement | undefined> | ComputedRef<HTMLElement | undefined>
   /**
    * 目标区域
    */
-  target?: Ref<HTMLElement | undefined>
+  target?: Ref<HTMLElement | undefined> | ComputedRef<HTMLElement | undefined>
   /**
    * 目标变化事件
    */
