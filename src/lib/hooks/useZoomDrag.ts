@@ -120,10 +120,10 @@ export default function useZoomDrag(opts: useZoomDragOptions): {
         zoom.value = 0
       }
       left.value = Math.round(
-        (boardWidth + (options.padding?.[3] ?? 0) - state.targetWidth * (1 + zoom.value)) / 2
+        (boardWidth - state.targetWidth * (1 + zoom.value)) / 2 + (options.padding?.[3] ?? 0)
       )
       top.value = Math.round(
-        (boardHeight + (options.padding?.[0] ?? 0) - state.targetHeight * (1 + zoom.value)) / 2
+        (boardHeight - state.targetHeight * (1 + zoom.value)) / 2 + (options.padding?.[0] ?? 0)
       )
       state.lastLeft = left.value
       state.lastTop = top.value
