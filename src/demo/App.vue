@@ -1,10 +1,9 @@
 <template>
-  <div class="demo" ref="board">
+  <div ref="boardRef" class="demo">
     <div
       :style="{
         visibility: ready1 ? 'visible' : 'hidden',
       }"
-      ref="target"
     >
       <img
         src="/big.jpg"
@@ -19,8 +18,14 @@
       />
     </div>
   </div>
-  <ZoomDrag class="demo" :zoomSpeed="0.01" :zoomMin="0.1">
-    <template #default="{ fitSize: fitSizeInner }">
+  <ZoomDrag
+    :zoomMin="0.1"
+    @target-change="onTargetChange"
+    @board-change="onBoardChange"
+    class="demo"
+    ref="comp"
+  >
+    <template #default="{ methods: { fitSize: fitSizeInner } }">
       <div :style="{ visibility: ready2 ? 'visible' : 'hidden' }">
         <img
           src="/big.jpg"
@@ -36,31 +41,45 @@
       </div>
     </template>
   </ZoomDrag>
-  <div class="demo" v-zoom-drag="{ zoomSpeed: 0.01, zoomMin: 0.1 }">
+  <div v-zoom-drag="{ zoomMin: 0.1, onTargetChange, onBoardChange }" class="demo">
     <img src="/big.jpg" alt="img" @dragstart.prevent />
   </div>
 </template>
 <script setup lang="ts">
 import { ref } from 'vue'
 
+import type { useZoomDragOptions } from '@/lib/types'
+// import type { useZoomDragOptions } from '../../dist'
+
 import useZoomDrag from '@/lib/hooks/useZoomDrag'
 // import { useZoomDrag } from '../../dist'
 
 // src/main.ts 中 app.use 安装了
-// import { ZoomDrag } from '@/lib/components/ZoomDrag'
+// import ZoomDrag from '@/lib/components/ZoomDrag.vue'
 // import { ZoomDrag } from '../../dist'
 
-const board = ref<HTMLElement>()
-const target = ref<HTMLElement>()
+const boardRef = ref<HTMLElement>()
 const ready1 = ref(false)
 
-const { fitSize } = useZoomDrag({
-  board,
-  target,
-  zoomSpeed: 0.01,
+const onTargetChange: useZoomDragOptions['onTargetChange'] = (info) => {
+  console.log('target change', info)
+}
+
+const onBoardChange: useZoomDragOptions['onBoardChange'] = (info, methods) => {
+  console.log('board change', info)
+  methods.fitSize()
+}
+
+const {
+  methods: { fitSize },
+} = useZoomDrag({
+  board: boardRef,
   zoomMin: 0.1,
+  onTargetChange,
+  onBoardChange,
 })
 
+const comp = ref()
 const ready2 = ref(false)
 </script>
 

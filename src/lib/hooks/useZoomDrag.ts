@@ -1,6 +1,6 @@
 import { ref, type Ref, reactive, watch } from 'vue'
 
-import type { useZoomDragOptions } from '../types'
+import type { useZoomDragOptions, ZoomDragMethods, ZoomDragSize } from '../types'
 
 const DefaultOptions: Partial<useZoomDragOptions> = {
   zoomSpeed: 0.1,
@@ -10,22 +10,9 @@ const DefaultOptions: Partial<useZoomDragOptions> = {
 }
 
 export default function useZoomDrag(opts: useZoomDragOptions): {
-  /**
-   * 目标放大缩小倍速
-   */
-  zoom: Ref<number>
-  /**
-   * 目标距离容器左边距离
-   */
-  left: Ref<number>
-  /**
-   * 目标距离容器上边距离
-   */
-  top: Ref<number>
-  /**
-   * 自适应
-   */
-  fitSize: (animate?: boolean) => void
+  target: Ref<ZoomDragSize & { zoom: number }>
+  board: Ref<ZoomDragSize>
+  methods: ZoomDragMethods
 } {
   const options = { ...DefaultOptions, ...opts }
 
@@ -54,6 +41,20 @@ export default function useZoomDrag(opts: useZoomDragOptions): {
   const left = ref<number>(0)
   const top = ref<number>(0)
 
+  const targetInfoRef: Ref<ZoomDragSize & { zoom: number }> = ref({
+    width: 0,
+    height: 0,
+    left: 0,
+    top: 0,
+    zoom: 1,
+  })
+  const boardInfoRef: Ref<ZoomDragSize> = ref({
+    width: 0,
+    height: 0,
+    left: 0,
+    top: 0,
+  })
+
   function getTarget() {
     if (options.target?.value === void 0) {
       if (options.board.value !== void 0) {
@@ -71,6 +72,16 @@ export default function useZoomDrag(opts: useZoomDragOptions): {
       target.style.transform = `scale(${zoom.value + 1})`
       target.style.left = `${left.value}px`
       target.style.top = `${top.value}px`
+
+      targetInfoRef.value = {
+        width: Math.round(state.targetWidth * (zoom.value + 1)),
+        height: Math.round(state.targetHeight * (zoom.value + 1)),
+        left: left.value,
+        top: top.value,
+        zoom: zoom.value,
+      }
+
+      options.onTargetChange && options.onTargetChange(targetInfoRef.value, { fitSize })
     }
   }
 
@@ -108,10 +119,12 @@ export default function useZoomDrag(opts: useZoomDragOptions): {
       if (zoom.value > 0) {
         zoom.value = 0
       }
-      left.value =
+      left.value = Math.round(
         (boardWidth + (options.padding?.[3] ?? 0) - state.targetWidth * (1 + zoom.value)) / 2
-      top.value =
+      )
+      top.value = Math.round(
         (boardHeight + (options.padding?.[0] ?? 0) - state.targetHeight * (1 + zoom.value)) / 2
+      )
       state.lastLeft = left.value
       state.lastTop = top.value
 
@@ -148,8 +161,8 @@ export default function useZoomDrag(opts: useZoomDragOptions): {
       const newSpanX = newTargetWidth * rateX - lastOffsetX
       const newSpanY = newTargetHeight * rateY - lastOffsetY
 
-      left.value = state.lastLeft - newSpanX
-      top.value = state.lastTop - newSpanY
+      left.value = Math.round(state.lastLeft - newSpanX)
+      top.value = Math.round(state.lastTop - newSpanY)
       state.lastLeft = left.value
       state.lastTop = top.value
 
@@ -170,9 +183,13 @@ export default function useZoomDrag(opts: useZoomDragOptions): {
     }
     return new Promise((resolve) => {
       if (ele) {
-        if (ele.tagName === 'IMG') {
-          ele.onload = () => {
+        if (ele instanceof HTMLImageElement) {
+          if (ele.complete) {
             inner(resolve)
+          } else {
+            ele.onload = () => {
+              inner(resolve)
+            }
           }
         } else {
           inner(resolve)
@@ -213,8 +230,8 @@ export default function useZoomDrag(opts: useZoomDragOptions): {
       if (state.isDown) {
         state.moveX = e.clientX
         state.moveY = e.clientY
-        left.value = state.lastLeft + state.moveX - state.startX
-        top.value = state.lastTop + state.moveY - state.startY
+        left.value = Math.round(state.lastLeft + state.moveX - state.startX)
+        top.value = Math.round(state.lastTop + state.moveY - state.startY)
 
         updateTargetStyle()
       }
@@ -244,14 +261,15 @@ export default function useZoomDrag(opts: useZoomDragOptions): {
         ;[state.boardWidth, state.boardHeight, state.boardLeft, state.boardTop] = await getSize(
           options.board.value
         )
-        options.onResize &&
-          options.onResize(
-            state.boardWidth,
-            state.boardHeight,
-            state.boardLeft,
-            state.boardTop,
-            zoom.value
-          )
+
+        boardInfoRef.value = {
+          width: state.boardWidth,
+          height: state.boardHeight,
+          left: state.boardLeft,
+          top: state.boardTop,
+        }
+
+        options.onBoardChange && options.onBoardChange(boardInfoRef.value, { fitSize })
       })
       resizeObserver.observe(options.board.value)
     }
@@ -315,9 +333,8 @@ export default function useZoomDrag(opts: useZoomDragOptions): {
   )
 
   return {
-    zoom,
-    left,
-    top,
-    fitSize,
+    target: targetInfoRef,
+    board: boardInfoRef,
+    methods: { fitSize },
   }
 }

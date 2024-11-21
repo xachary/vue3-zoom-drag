@@ -1,5 +1,16 @@
 import { type Ref, type ComputedRef } from 'vue'
 
+export interface ZoomDragSize {
+  width: number
+  height: number
+  left: number
+  top: number
+}
+
+export type ZoomDragMethods = {
+  fitSize: (animate?: boolean) => void
+}
+
 export type useZoomDragOptions = {
   /**
    * 容器区域
@@ -10,13 +21,13 @@ export type useZoomDragOptions = {
    */
   target?: Ref<HTMLElement | undefined> | ComputedRef<HTMLElement | undefined>
   /**
-   * 容器大小变化事件
-   * @param width 宽
-   * @param height 高
-   * @param left x
-   * @param top y
+   * 目标变化事件
    */
-  onResize?: (width: number, height: number, left: number, top: number, zoom: number) => void
+  onTargetChange?: (info: ZoomDragSize & { zoom: number }, methods: ZoomDragMethods) => void
+  /**
+   * 容器大小变化事件
+   */
+  onBoardChange?: (info: ZoomDragSize, methods: ZoomDragMethods) => void
   /**
    * 初始化完成事件
    */

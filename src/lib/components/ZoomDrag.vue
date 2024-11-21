@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import useZoomDrag from '@/lib/hooks/useZoomDrag'
-import type { useZoomDragOptions } from '../types'
+import type { useZoomDragOptions, ZoomDragSize, ZoomDragMethods } from '../types'
 
 const props = withDefaults(
   defineProps<Pick<useZoomDragOptions, 'zoomSpeed' | 'zoomMax' | 'zoomMin' | 'padding'>>(),
@@ -12,10 +12,10 @@ const props = withDefaults(
   }
 )
 
-const board = ref<HTMLElement>()
+const boardRef = ref<HTMLElement>()
 
-const { zoom, left, top, fitSize } = useZoomDrag({
-  board,
+const { target, board, methods } = useZoomDrag({
+  board: boardRef,
   zoomSpeed: props.zoomSpeed,
   zoomMax: props.zoomMax,
   zoomMin: props.zoomMin,
@@ -24,26 +24,26 @@ const { zoom, left, top, fitSize } = useZoomDrag({
   onReady: () => {
     emits('ready')
   },
-  onResize: (width: number, height: number, left: number, top: number, zoom: number) => {
-    emits('resize', width, height, left, top, zoom)
+  onTargetChange: (info: ZoomDragSize & { zoom: number }, methods: ZoomDragMethods) => {
+    emits('target-change', info, methods)
+  },
+  onBoardChange: (info: ZoomDragSize, methods: ZoomDragMethods) => {
+    emits('board-change', info, methods)
   },
 })
 
-const emits = defineEmits(['ready', 'resize'])
+const emits = defineEmits(['ready', 'target-change', 'board-change'])
 
-defineExpose({
-  fitSize,
-})
+defineExpose(methods)
 </script>
 
 <template>
-  <div ref="board">
+  <div ref="boardRef">
     <slot
       v-bind="{
-        zoom,
-        left,
-        top,
-        fitSize,
+        target,
+        board,
+        methods,
       }"
     ></slot>
   </div>
