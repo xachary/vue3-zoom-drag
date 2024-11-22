@@ -114,7 +114,7 @@ export default function useZoomDrag(opts: useZoomDragOptions): {
         zoom.value = boardWidth / state.targetWidth - 1
       }
 
-      zoom.value = Math.floor(zoom.value * 100) / 100
+      zoom.value = Math.floor(zoom.value * 1000) / 1000
 
       if (zoom.value > 0) {
         zoom.value = 0
@@ -153,7 +153,7 @@ export default function useZoomDrag(opts: useZoomDragOptions): {
       const rateY = lastOffsetY / lastTargetHeight
 
       zoom.value += value
-      zoom.value = Math.round(zoom.value * 100) / 100
+      zoom.value = Math.round(zoom.value * 1000) / 1000
 
       const newTargetWidth = state.targetWidth * (1 + zoom.value)
       const newTargetHeight = state.targetHeight * (1 + zoom.value)

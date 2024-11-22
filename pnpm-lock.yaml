@@ -12,8 +12,8 @@ importers:
         specifier: ^3.5.12
         version: 3.5.12(typescript@5.4.3)
       vue3-zoom-drag:
-        specifier: ^0.0.7
-        version: 0.0.7(typescript@5.4.3)
+        specifier: ^0.0.9
+        version: 0.0.9(typescript@5.4.3)
     devDependencies:
       '@commitlint/cli':
         specifier: 19.2.1
@@ -2717,14 +2717,8 @@ packages:
     peerDependencies:
       typescript: '*'
 
-  vue3-zoom-drag@0.0.5:
-    resolution: {integrity: sha512-gMmWiwNzh0SD8RAXjM4S6mNhD0lWee2g/AderzG7B9Ziz+yMTtITrxZLH1Fm1d+Gy/3425vIBVSwgTf7fVI12g==}
-
-  vue3-zoom-drag@0.0.6:
-    resolution: {integrity: sha512-j86LQE7aZFoSAZZGGBloQlfMWanqUaa6brzmXjT+XuWZVC5LLBWxg1QiEnq14oaH6rGkaVBELn3QLV3QupI3Bg==}
-
-  vue3-zoom-drag@0.0.7:
-    resolution: {integrity: sha512-p/1o6swlyXSf2qb76hnmKiZDRLGivxrJ/ny1cxIv3/xGCDgpqW8YznLYn6phg7FQaRlCUdQw0KIIpySCqHD/pw==}
+  vue3-zoom-drag@0.0.9:
+    resolution: {integrity: sha512-rgPHc7ATv6At2fRI+1Giow2F1LRj3nhzC+TnITnFfGRBI35sbbOXtDP7IWga+uz969yqMk6cbt/BFgSuLPAn+Q==}
 
   vue@3.5.12:
     resolution: {integrity: sha512-CLVZtXtn2ItBIi/zHZ0Sg1Xkb7+PU32bJJ8Bmy7ts3jxXTcbfsEfBivFYYWz1Hur+lalqGAh65Coin0r+HRUfg==}
@@ -5397,23 +5391,9 @@ snapshots:
       semver: 7.6.0
       typescript: 5.4.3
 
-  vue3-zoom-drag@0.0.5(typescript@5.4.3):
+  vue3-zoom-drag@0.0.9(typescript@5.4.3):
     dependencies:
       vue: 3.5.12(typescript@5.4.3)
-    transitivePeerDependencies:
-      - typescript
-
-  vue3-zoom-drag@0.0.6(typescript@5.4.3):
-    dependencies:
-      vue: 3.5.12(typescript@5.4.3)
-      vue3-zoom-drag: 0.0.5(typescript@5.4.3)
-    transitivePeerDependencies:
-      - typescript
-
-  vue3-zoom-drag@0.0.7(typescript@5.4.3):
-    dependencies:
-      vue: 3.5.12(typescript@5.4.3)
-      vue3-zoom-drag: 0.0.6(typescript@5.4.3)
     transitivePeerDependencies:
       - typescript
 
