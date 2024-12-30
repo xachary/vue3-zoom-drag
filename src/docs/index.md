@@ -9,7 +9,7 @@ hero:
   actions:
     - theme: brand
       text: 快速上手
-      link: /guide/intro
+      link: /guide/install
     - theme: alt
       text: 示例
       link: https://xachary.github.io/vue3-zoom-drag/demo
