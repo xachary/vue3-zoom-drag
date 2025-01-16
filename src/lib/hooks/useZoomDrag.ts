@@ -81,7 +81,7 @@ export default function useZoomDrag(opts: useZoomDragOptions): {
         zoom: zoom.value,
       }
 
-      options.onTargetChange && options.onTargetChange(targetInfoRef.value, { fitSize })
+      options.onTargetChange && options.onTargetChange(targetInfoRef.value, { fitSize, focus })
     }
   }
 
@@ -137,6 +137,57 @@ export default function useZoomDrag(opts: useZoomDragOptions): {
           }
         }, 300)
       }
+    }
+  }
+
+  // 聚焦目标
+  async function focus(dom: HTMLElement, padding: number = 4) {
+    const target = getTarget()
+    if (options.board.value && target) {
+      ;[state.boardWidth, state.boardHeight, state.boardLeft, state.boardTop] = await getSize(
+        options.board.value
+      )
+      ;[state.targetWidth, state.targetHeight] = await getSize(target)
+
+      const [domWidth, domHeight, domLeft, domTop] = [
+        dom.offsetWidth + padding * 2,
+        dom.offsetHeight + padding * 2,
+        dom.offsetLeft,
+        dom.offsetTop,
+      ]
+
+      const rateBoard = state.boardWidth / state.boardHeight
+      const rateDom = domWidth / domHeight
+
+      const [boardWidth, boardHeight] = [
+        state.boardWidth - (options.padding?.[1] ?? 0) - (options.padding?.[3] ?? 0),
+        state.boardHeight - (options.padding?.[0] ?? 0) - (options.padding?.[2] ?? 0),
+      ]
+
+      if (rateBoard > rateDom) {
+        zoom.value = boardHeight / domHeight - 1
+      } else if (rateBoard < rateDom) {
+        zoom.value = boardWidth / domWidth - 1
+      }
+
+      zoom.value = Math.floor(zoom.value * 1000) / 1000
+
+      left.value = Math.round(
+        (boardWidth - domWidth * (1 + zoom.value)) / 2 +
+          (options.padding?.[3] ?? 0) -
+          domLeft * (1 + zoom.value) +
+          padding * (1 + zoom.value)
+      )
+      top.value = Math.round(
+        (boardHeight - domHeight * (1 + zoom.value)) / 2 +
+          (options.padding?.[0] ?? 0) -
+          domTop * (1 + zoom.value) +
+          padding * (1 + zoom.value)
+      )
+      state.lastLeft = left.value
+      state.lastTop = top.value
+
+      updateTargetStyle()
     }
   }
 
@@ -269,7 +320,7 @@ export default function useZoomDrag(opts: useZoomDragOptions): {
           top: state.boardTop,
         }
 
-        options.onBoardChange && options.onBoardChange(boardInfoRef.value, { fitSize })
+        options.onBoardChange && options.onBoardChange(boardInfoRef.value, { fitSize, focus })
       })
       resizeObserver.observe(options.board.value)
     }
@@ -335,6 +386,6 @@ export default function useZoomDrag(opts: useZoomDragOptions): {
   return {
     target: targetInfoRef,
     board: boardInfoRef,
-    methods: { fitSize },
+    methods: { fitSize, focus },
   }
 }
