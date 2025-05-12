@@ -81,7 +81,8 @@ export default function useZoomDrag(opts: useZoomDragOptions): {
         zoom: zoom.value,
       }
 
-      options.onTargetChange && options.onTargetChange(targetInfoRef.value, { fitSize, focus })
+      options.onTargetChange &&
+        options.onTargetChange(targetInfoRef.value, { fitSize, focus, center })
     }
   }
 
@@ -141,8 +142,8 @@ export default function useZoomDrag(opts: useZoomDragOptions): {
   }
 
   // 聚焦目标
-  async function focus(dom: HTMLElement, padding: number = 4) {
-    const target = getTarget()
+  async function focus(dom: HTMLElement | null | undefined, padding: number = 4) {
+    const target = dom ?? getTarget()
     if (options.board.value && target) {
       ;[state.boardWidth, state.boardHeight, state.boardLeft, state.boardTop] = await getSize(
         options.board.value
@@ -150,10 +151,10 @@ export default function useZoomDrag(opts: useZoomDragOptions): {
       ;[state.targetWidth, state.targetHeight] = await getSize(target)
 
       const [domWidth, domHeight, domLeft, domTop] = [
-        dom.offsetWidth + padding * 2,
-        dom.offsetHeight + padding * 2,
-        dom.offsetLeft,
-        dom.offsetTop,
+        target.offsetWidth + padding * 2,
+        target.offsetHeight + padding * 2,
+        target.offsetLeft,
+        target.offsetTop,
       ]
 
       const rateBoard = state.boardWidth / state.boardHeight
@@ -183,6 +184,37 @@ export default function useZoomDrag(opts: useZoomDragOptions): {
           (options.padding?.[0] ?? 0) -
           domTop * (1 + zoom.value) +
           padding * (1 + zoom.value)
+      )
+      state.lastLeft = left.value
+      state.lastTop = top.value
+
+      updateTargetStyle()
+    }
+  }
+
+  // 居中目标
+  async function center(dom: HTMLElement | null | undefined) {
+    const target = dom ?? getTarget()
+    if (options.board.value && target) {
+      ;[state.boardWidth, state.boardHeight, state.boardLeft, state.boardTop] = await getSize(
+        options.board.value
+      )
+      ;[state.targetWidth, state.targetHeight] = await getSize(target)
+
+      const [domWidth, domHeight, domLeft, domTop] = [
+        target.offsetWidth,
+        target.offsetHeight,
+        target.offsetLeft,
+        target.offsetTop,
+      ]
+
+      const [boardWidth, boardHeight] = [state.boardWidth, state.boardHeight]
+
+      left.value = Math.round(
+        (boardWidth - domWidth * (1 + zoom.value)) / 2 + -domLeft * (1 + zoom.value)
+      )
+      top.value = Math.round(
+        (boardHeight - domHeight * (1 + zoom.value)) / 2 + -domTop * (1 + zoom.value)
       )
       state.lastLeft = left.value
       state.lastTop = top.value
@@ -320,7 +352,8 @@ export default function useZoomDrag(opts: useZoomDragOptions): {
           top: state.boardTop,
         }
 
-        options.onBoardChange && options.onBoardChange(boardInfoRef.value, { fitSize, focus })
+        options.onBoardChange &&
+          options.onBoardChange(boardInfoRef.value, { fitSize, focus, center })
       })
       resizeObserver.observe(options.board.value)
     }
@@ -386,6 +419,6 @@ export default function useZoomDrag(opts: useZoomDragOptions): {
   return {
     target: targetInfoRef,
     board: boardInfoRef,
-    methods: { fitSize, focus },
+    methods: { fitSize, focus, center },
   }
 }

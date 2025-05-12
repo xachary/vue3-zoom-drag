@@ -9,7 +9,8 @@ export interface ZoomDragSize {
 
 export type ZoomDragMethods = {
   fitSize: (animate?: boolean) => void
-  focus: (dom: HTMLElement, padding: number) => void
+  focus: (dom: HTMLElement | null | undefined, padding: number) => void
+  center: (dom: HTMLElement | null | undefined) => void
 }
 
 export type useZoomDragOptions = {
