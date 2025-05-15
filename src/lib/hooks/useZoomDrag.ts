@@ -82,12 +82,42 @@ export default function useZoomDrag(opts: useZoomDragOptions): {
       }
 
       options.onTargetChange &&
-        options.onTargetChange(targetInfoRef.value, { fitSize, focus, center })
+        options.onTargetChange(targetInfoRef.value, {
+          fitSize: fitSizeFn,
+          focus: focusFn,
+          center: centerFn,
+          zoom: zoomFn,
+        })
     }
   }
 
   // 自适应大小
-  async function fitSize(animate = false) {
+  async function zoomFn(value: number, animate = false, point?: { x: number; y: number } | null) {
+    const target = getTarget()
+    if (options.board.value && target) {
+      if (animate) {
+        target.style.transition = 'all 0.3s ease-in'
+      }
+
+      const p = point ?? {
+        x: state.boardLeft + state.boardWidth / 2,
+        y: state.boardTop + state.boardHeight / 2,
+      }
+
+      changeZoom(value, p)
+
+      if (animate) {
+        setTimeout(() => {
+          if (target) {
+            target.style.transition = 'none'
+          }
+        }, 300)
+      }
+    }
+  }
+
+  // 自适应大小
+  async function fitSizeFn(animate = false) {
     const target = getTarget()
     if (options.board.value && target) {
       // 记录容器、目标大小
@@ -142,7 +172,7 @@ export default function useZoomDrag(opts: useZoomDragOptions): {
   }
 
   // 聚焦目标
-  async function focus(dom: HTMLElement | null | undefined, padding: number = 4) {
+  async function focusFn(dom: HTMLElement | null | undefined, padding: number = 4) {
     const target = dom ?? getTarget()
     if (options.board.value && target) {
       ;[state.boardWidth, state.boardHeight, state.boardLeft, state.boardTop] = await getSize(
@@ -193,7 +223,7 @@ export default function useZoomDrag(opts: useZoomDragOptions): {
   }
 
   // 居中目标
-  async function center(dom: HTMLElement | null | undefined) {
+  async function centerFn(dom: HTMLElement | null | undefined) {
     const target = dom ?? getTarget()
     if (options.board.value && target) {
       ;[state.boardWidth, state.boardHeight, state.boardLeft, state.boardTop] = await getSize(
@@ -224,18 +254,18 @@ export default function useZoomDrag(opts: useZoomDragOptions): {
   }
 
   // 放大缩小
-  function changeZoom(value: number) {
+  function changeZoom(value: number, point: { x: number; y: number }) {
     const target = getTarget()
 
     if (options.board.value && target) {
       const lastTargetWidth = state.targetWidth * (1 + zoom.value)
       const lastTargetHeight = state.targetHeight * (1 + zoom.value)
-      const lastOffsetX = state.overX - state.lastLeft - state.boardLeft
-      const lastOffsetY = state.overY - state.lastTop - state.boardTop
+      const lastOffsetX = point.x - state.lastLeft - state.boardLeft
+      const lastOffsetY = point.y - state.lastTop - state.boardTop
       const rateX = lastOffsetX / lastTargetWidth
       const rateY = lastOffsetY / lastTargetHeight
 
-      zoom.value += value
+      zoom.value = value
       zoom.value = Math.round(zoom.value * 1000) / 1000
 
       const newTargetWidth = state.targetWidth * (1 + zoom.value)
@@ -287,11 +317,11 @@ export default function useZoomDrag(opts: useZoomDragOptions): {
     zoom: (e: WheelEvent) => {
       if (e.deltaY < 0) {
         if (zoom.value <= options.zoomMax! - options.zoomSpeed!) {
-          changeZoom(options.zoomSpeed!)
+          changeZoom(zoom.value + options.zoomSpeed!, { x: state.overX, y: state.overY })
         }
       } else if (e.deltaY > 0) {
         if (zoom.value >= options.zoomMin! - 1 + options.zoomSpeed!) {
-          changeZoom(-options.zoomSpeed!)
+          changeZoom(zoom.value - options.zoomSpeed!, { x: state.overX, y: state.overY })
         }
       }
 
@@ -353,7 +383,12 @@ export default function useZoomDrag(opts: useZoomDragOptions): {
         }
 
         options.onBoardChange &&
-          options.onBoardChange(boardInfoRef.value, { fitSize, focus, center })
+          options.onBoardChange(boardInfoRef.value, {
+            fitSize: fitSizeFn,
+            focus: focusFn,
+            center: centerFn,
+            zoom: zoomFn,
+          })
       })
       resizeObserver.observe(options.board.value)
     }
@@ -405,7 +440,7 @@ export default function useZoomDrag(opts: useZoomDragOptions): {
         // 事件控制
         eventHandle()
         //
-        await fitSize()
+        await fitSizeFn()
 
         // 初始化完成
         options.onReady && options.onReady()
@@ -419,6 +454,6 @@ export default function useZoomDrag(opts: useZoomDragOptions): {
   return {
     target: targetInfoRef,
     board: boardInfoRef,
-    methods: { fitSize, focus, center },
+    methods: { fitSize: fitSizeFn, focus: focusFn, center: centerFn, zoom: zoomFn },
   }
 }
